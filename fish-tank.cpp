@@ -1,9 +1,19 @@
 #include <GL/glut.h>
 
+// Variables for rotation
+float angleX = 0.0f;
+float angleY = 0.0f;
+float angleZ = 0.0f;
+
 void display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+
+    // Apply rotations
+    glRotatef(angleX, 1.0f, 0.0f, 0.0f);
+    glRotatef(angleY, 0.0f, 1.0f, 0.0f);
+    glRotatef(angleZ, 0.0f, 0.0f, 1.0f);
 
     // Dimensiones de la pecera en metros (dimensiones normales mexicanas)
     float width = 1.5f;
@@ -46,6 +56,50 @@ void display()
     glutSwapBuffers();
 }
 
+void specialKeys(int key, int x, int y)
+{
+    // Handle rotation based on arrow keys
+    switch (key) {
+        case GLUT_KEY_LEFT:
+            angleY -= 5.0f;
+            break;
+        case GLUT_KEY_RIGHT:
+            angleY += 5.0f;
+            break;
+        case GLUT_KEY_UP:
+            angleX -= 5.0f;
+            break;
+        case GLUT_KEY_DOWN:
+            angleX += 5.0f;
+            break;
+    }
+
+    // Redraw the scene
+    glutPostRedisplay();
+}
+
+void keyboard(unsigned char key, int x, int y)
+{
+    // Handle rotation based on WASD keys
+    switch (key) {
+        case 'w':
+            angleX -= 5.0f;
+            break;
+        case 's':
+            angleX += 5.0f;
+            break;
+        case 'a':
+            angleY -= 5.0f;
+            break;
+        case 'd':
+            angleY += 5.0f;
+            break;
+    }
+
+    // Redraw the scene
+    glutPostRedisplay();
+}
+
 int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
@@ -56,6 +110,8 @@ int main(int argc, char** argv)
     glEnable(GL_DEPTH_TEST);
 
     glutDisplayFunc(display);
+    glutSpecialFunc(specialKeys);
+    glutKeyboardFunc(keyboard);
     glutMainLoop();
 
     return 0;
